@@ -1,0 +1,37 @@
+{
+  "name": "daily-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon bin/www",
+    "dev": "node ./bin/www",
+    "pm2": "pm2 start ./bin/www",
+    "test:ip": "node ./utils/getip",
+    "test:sql": "node ./utils/mysql"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "js-base64": "^2.5.2",
+    "jsonwebtoken": "^8.5.1",
+    "leancloud-storage": "^4.6.0",
+    "leanengine": "^3.6.0",
+    "moment": "^2.26.0",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.1.0",
+    "nodemon": "^1.19.4",
+    "pug": "^2.0.3",
+    "sequelize": "^6.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.1",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/preset-env": "^7.10.1",
+    "@babel/register": "^7.10.1",
+    "@babel/runtime": "^7.10.1",
+    "babel-loader": "^8.1.0"
+  }
+}
