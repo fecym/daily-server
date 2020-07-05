@@ -11,9 +11,9 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 // 引入路由配置
-import routes from './routes'
+import routes from './src/routes'
 
-import dealJwt from './middleware/jwt'
+import dealJwt from './src/middleware/jwt'
 
 const app = express()
 

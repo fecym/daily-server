@@ -7,4 +7,4 @@ module.exports = {
   del: 'DELETE FROM ?? WHERE id=?',
   // 列出表中所有字段名
   showAllFieldName: 'SHOW COLUMNS FROM ?? FROM ??'
-}
+};

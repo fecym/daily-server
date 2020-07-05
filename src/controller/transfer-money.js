@@ -1,4 +1,4 @@
-import { writeJson, connectionPool, toHump, parseTime } from '../utils';
+import { writeJson } from '../utils';
 import { ERROR_MESSAGE } from '../utils/constant';
 import { sequelize } from '../config/sequelize';
 import TransferMoney from '../model/transfer-money';
@@ -13,7 +13,7 @@ export const createRecord = async (req, res) => {
       transfer_time: new Date('2020-07-05'),
       repayment_time: new Date('2020-07-05'),
       type: 0,
-      amount: 12000,
+      amount: 12000
     });
     writeJson(res, 200, 'ok', true);
   } catch (e) {

@@ -6,7 +6,7 @@
  * @LastEditTime: 2019-08-18 22:15:39
  */
 
-import { API, userApi, consumeApi, blogApi, summaryApi, transferApi } from '../utils/constant'
+import { API, userApi, consumeApi, blogApi, summaryApi, transferApi } from '../utils/constant';
 
 module.exports = {
   testApi: API + '/getList',
@@ -51,5 +51,5 @@ module.exports = {
 
   // 转账相关
   transferMoneyTest: transferApi + '/create/record',
-  findTransferRecordsApi: transferApi + '/get/list',
-}
+  findTransferRecordsApi: transferApi + '/get/list'
+};

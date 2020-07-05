@@ -4,7 +4,7 @@ require('@babel/register');
 const app = require('../app');
 const debug = require('debug')('daily-service:server');
 const http = require('http');
-const getIp = require('../utils/getIp')
+const getIp = require('../src/utils/getIp')
 const IP = getIp()
 
 /**

@@ -3,6 +3,7 @@
     "CURDATE",
     "Echarts",
     "WEEKOFYEAR",
-    "leanengine"
+    "leanengine",
+    "realname"
   ]
 }

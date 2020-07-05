@@ -9,14 +9,14 @@ TransferMoney.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
+      primaryKey: true
     },
     user_id: DataTypes.INTEGER,
     transfer_name: DataTypes.STRING,
     transfer_time: DataTypes.DATE,
     repayment_time: DataTypes.DATE,
     type: DataTypes.INTEGER,
-    amount: DataTypes.INTEGER,
+    amount: DataTypes.INTEGER
   },
   { sequelize, modelName: 'transfer_money', tableName: 'transfer_money' }
 );

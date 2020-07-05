@@ -1,5 +1,5 @@
-import { Sequelize } from 'sequelize'
-import mysqlConf from '../config/mysql'
+import { Sequelize } from 'sequelize';
+import mysqlConf from '../config/mysql';
 
 export const sequelize = new Sequelize(mysqlConf.database, mysqlConf.user, mysqlConf.password, {
   host: mysqlConf.host,
@@ -7,8 +7,8 @@ export const sequelize = new Sequelize(mysqlConf.database, mysqlConf.user, mysql
   pool: {
     max: 5,
     min: 0,
-    idle: 30000,
-  },
+    idle: 30000
+  }
 });
 
 export async function testConnect() {
@@ -19,4 +19,3 @@ export async function testConnect() {
     console.error('Unable to connect to the database:', error);
   }
 }
-

@@ -6,8 +6,10 @@
     "start": "nodemon bin/www",
     "dev": "node ./bin/www",
     "pm2": "pm2 start ./bin/www",
-    "test:ip": "node ./utils/getip",
-    "test:sql": "node ./utils/mysql"
+    "test:ip": "node ./utils/getIp",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "prettier": "prettier --write src/."
   },
   "dependencies": {
     "cookie-parser": "^1.4.5",
@@ -32,6 +34,19 @@
     "@babel/preset-env": "^7.10.1",
     "@babel/register": "^7.10.1",
     "@babel/runtime": "^7.10.1",
-    "babel-loader": "^8.1.0"
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.4.0",
+    "eslint-config-alloy": "^3.7.3",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   }
 }
