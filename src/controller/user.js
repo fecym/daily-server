@@ -6,18 +6,7 @@
  * @LastEditTime: 2019-09-22 23:26:11
  */
 
-import {
-  connectionPool,
-  writeJson,
-  generateToken,
-  dealUpdateSql,
-  parseTime,
-  toHump,
-  isEmptyObject,
-  limitSearch,
-  decodeBase64,
-  toMd5
-} from '../utils';
+import { connectionPool, writeJson, generateToken, dealUpdateSql, parseTime, toHump, isEmptyObject, limitSearch, decodeBase64, toMd5 } from '../utils';
 
 import { ERROR_MESSAGE } from '../utils/constant';
 
@@ -26,13 +15,7 @@ export const Login = async (req, res, next) => {
   const { username, password: pass } = req.body;
   const password = toMd5(decodeBase64(pass));
   try {
-    const data = await connectionPool(queryByMulti, [
-      'user',
-      'username',
-      username,
-      'password',
-      password
-    ]);
+    const data = await connectionPool(queryByMulti, ['user', 'username', username, 'password', password]);
     if (data && data.length) {
       const response = data[0];
       response.roles = [response.role];
@@ -94,12 +77,7 @@ export const updatePassword = async (req, res, next) => {
     const newPass = toMd5(decodeBase64(newPassword));
     const oldPass = toMd5(decodeBase64(oldPassword));
     const selectPasswordInfoSql = `SELECT ?? FROM ?? WHERE ??=?`;
-    const passwordData = await connectionPool(selectPasswordInfoSql, [
-      'password',
-      'user',
-      'id',
-      req.uid
-    ]);
+    const passwordData = await connectionPool(selectPasswordInfoSql, ['password', 'user', 'id', req.uid]);
     const password = passwordData[0].password;
     if (oldPass !== password) {
       return writeJson(res, 400, '密码错误', null);
@@ -174,8 +152,7 @@ export const queryAccountsList = async (req, res, next) => {
 export const createAccount = async (req, res, next) => {
   if (req.username !== 'cym') return writeJson(res, 402, '你没有权限创建用户', null);
   const { username, realname, nickname, password } = req.body;
-  if (!username || !realname || !nickname || !password)
-    return writeJson(res, 400, '用户基本信息和用户密码必填', null);
+  if (!username || !realname || !nickname || !password) return writeJson(res, 400, '用户基本信息和用户密码必填', null);
   // 处理字段名
   // let fieldStr = Object.keys(req.body).map(item => toLine(item)).join(', ')
   // // 处理value

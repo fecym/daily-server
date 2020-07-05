@@ -1,12 +1,6 @@
 // 首页汇总接口
 import { writeJson, connectionPool, toHump, parseTime } from '../utils';
-import {
-  ERROR_MESSAGE,
-  TABLE_NAME,
-  weekMap,
-  weekMapEn,
-  consumeAmountFieldStr
-} from '../utils/constant';
+import { ERROR_MESSAGE, TABLE_NAME, weekMap, weekMapEn, consumeAmountFieldStr } from '../utils/constant';
 import AV from '../config/leanengine';
 import moment from 'moment';
 
@@ -107,12 +101,7 @@ export const getConsumeByYear = async (req, res) => {
       year_fee
   `;
   try {
-    const list = await connectionPool(_sql, [
-      'total_amount',
-      'create_time',
-      'total_amount',
-      req.username
-    ]);
+    const list = await connectionPool(_sql, ['total_amount', 'create_time', 'total_amount', req.username]);
     const result = list.map((item) => {
       const obj = {};
       Object.keys(item).forEach((key) => {

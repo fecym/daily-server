@@ -6,7 +6,16 @@
  * @LastEditTime: 2019-08-18 22:15:39
  */
 
-import { API, userApi, consumeApi, blogApi, summaryApi, transferApi } from '../utils/constant';
+// import { API, userApi, consumeApi, blogApi, summaryApi, transferApi } from '../utils/constant';
+export const API = '/api';
+export const userApi = API + '/user';
+// 消费api
+export const consumeApi = API + '/consume';
+// 博客统计相关API
+export const blogApi = API + '/blog';
+// 汇总相关
+export const summaryApi = API + '/summary';
+export const transferApi = API + '/transfer';
 
 module.exports = {
   testApi: API + '/getList',
@@ -50,6 +59,9 @@ module.exports = {
   // getConsumeByLast7DayRecords
 
   // 转账相关
-  transferMoneyTest: transferApi + '/create/record',
-  findTransferRecordsApi: transferApi + '/get/list'
+  createTransferMoneyInfo: transferApi + '/create/record',
+  updateTransferMoneyInfo: transferApi + '/update/record',
+  getTransferMoneyInfo: transferApi + '/get/transfer/info',
+  findTransferRecordsApi: transferApi + '/get/list',
+  findTransferAllRecordsApi: transferApi + '/get/all/list'
 };

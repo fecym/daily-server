@@ -1,4 +1,5 @@
 import { loginApi, blogSummary } from '../routes/api';
+console.log('loginApi, blogSummary', loginApi, blogSummary);
 export const ERROR_MESSAGE = '服务器异常';
 export const WHITE_LIST = [loginApi, blogSummary];
 
@@ -44,13 +45,3 @@ export const consumeAmountField = [
   'shopping_price'
 ];
 export const consumeAmountFieldStr = consumeAmountField.join(',');
-
-export const API = '/api';
-export const userApi = API + '/user';
-// 消费api
-export const consumeApi = API + '/consume';
-// 博客统计相关API
-export const blogApi = API + '/blog';
-// 汇总相关
-export const summaryApi = API + '/summary';
-export const transferApi = API + '/transfer';

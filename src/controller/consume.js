@@ -8,17 +8,7 @@
 // const { writeJson, connectionPool, isEmptyObject, toHump, toLine, dealUpdateSql, limitSearch, formatLimitData, parseTime } = require('../utils')
 import fs from 'fs';
 import path from 'path';
-import {
-  writeJson,
-  connectionPool,
-  isEmptyObject,
-  toHump,
-  toLine,
-  dealUpdateSql,
-  limitSearch,
-  formatLimitData,
-  parseTime
-} from '../utils';
+import { writeJson, connectionPool, isEmptyObject, toHump, toLine, dealUpdateSql, limitSearch, formatLimitData, parseTime } from '../utils';
 import { ERROR_MESSAGE } from '../utils/constant';
 const SQL_TABLE_NAME = 'consume';
 const PRIMARY_ID = 'id';
@@ -123,17 +113,7 @@ export const findConsumeList = async (req, res, next) => {
 
 // 添加日常消费核心逻辑，判断完毕后调用
 const addConsumeInfoCore = async (req, res) => {
-  const {
-    repastPrice,
-    vehiclePrice,
-    snacksPrice,
-    transferAccounts,
-    otherPrice,
-    cosmeticPrice,
-    lifePrice,
-    tripPrice,
-    shoppingPrice
-  } = req.body;
+  const { repastPrice, vehiclePrice, snacksPrice, transferAccounts, otherPrice, cosmeticPrice, lifePrice, tripPrice, shoppingPrice } = req.body;
   // 转驼峰传过去
   let fieldStr = Object.keys(req.body)
     .map((item) => toLine(item))
@@ -208,20 +188,7 @@ export const addConsumeInfo = async (req, res, next) => {
 };
 
 export const updateConsumeInfo = async (req, res, next) => {
-  const {
-    createTime,
-    username,
-    repastPrice,
-    id,
-    vehiclePrice,
-    snacksPrice,
-    transferAccounts,
-    otherPrice,
-    cosmeticPrice,
-    lifePrice,
-    tripPrice,
-    shoppingPrice
-  } = req.body;
+  const { createTime, username, repastPrice, id, vehiclePrice, snacksPrice, transferAccounts, otherPrice, cosmeticPrice, lifePrice, tripPrice, shoppingPrice } = req.body;
   if (!createTime || !username || !repastPrice || !id) {
     return writeJson(res, 400, '参数校验失败', null);
   }
@@ -258,12 +225,7 @@ export const currentMonthStatistics = async (req, res, next) => {
   const _sql = `SELECT * FROM ?? WHERE ??=? AND DATE_FORMAT(??, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m');`;
   // const _sql = `SELECT * FROM ?? WHERE ??=? AND LEFT(??, 7) = '2019-10'`
   try {
-    const list = await connectionPool(_sql, [
-      `${SQL_TABLE_NAME}`,
-      'username',
-      req.username,
-      'create_time'
-    ]);
+    const list = await connectionPool(_sql, [`${SQL_TABLE_NAME}`, 'username', req.username, 'create_time']);
     const statistics = {
       vehicle_price: 0,
       drinks_price: 0,

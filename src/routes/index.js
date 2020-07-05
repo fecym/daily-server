@@ -13,24 +13,9 @@ import api from './api';
 // import * as testHello  from '../controller/test'
 // console.log(testHello.default, 'test')
 // 登录，登出接口
-import {
-  Login,
-  UpdateInfo,
-  updatePassword,
-  queryAccountsList,
-  createAccount,
-  switchGuideFeature
-} from '../controller/user';
+import { Login, UpdateInfo, updatePassword, queryAccountsList, createAccount, switchGuideFeature } from '../controller/user';
 // 消费接口类
-import {
-  getAddress,
-  findConsumeList,
-  addConsumeInfo,
-  updateConsumeInfo,
-  getAllConsumeList,
-  currentMonthStatistics,
-  summaryMonthAmounts
-} from '../controller/consume';
+import { getAddress, findConsumeList, addConsumeInfo, updateConsumeInfo, getAllConsumeList, currentMonthStatistics, summaryMonthAmounts } from '../controller/consume';
 // 博客相关
 import { getBlogSummaryInfo } from './../controller/blog';
 // 汇总
@@ -44,7 +29,7 @@ import {
 } from '../controller/summary';
 
 // 转账
-import { createRecord, findTransferRecords } from '../controller/transfer-money';
+import { createRecord, updateTransferInfo, findTransferRecords, findAllTransferRecords, getTransferInfo } from '../controller/transfer-money';
 
 // router.get(api.testApi, test)
 router.post(api.loginApi, Login);
@@ -82,7 +67,10 @@ router.get(api.consumeByCurrentWeek, getConsumeTotalAmountByWeek);
 router.get(api.consumeRecordByCurrentWeek, getConsumeRecordByCurrentWeek);
 router.get(api.consumeRecordByLast7Day, getConsumeByLast7DayRecords);
 
-router.get(api.transferMoneyTest, createRecord);
+router.post(api.createTransferMoneyInfo, createRecord);
+router.post(api.updateTransferMoneyInfo, updateTransferInfo);
+router.get(api.getTransferMoneyInfo, getTransferInfo);
 router.get(api.findTransferRecordsApi, findTransferRecords);
+router.get(api.findTransferAllRecordsApi, findAllTransferRecords);
 
 export default router;

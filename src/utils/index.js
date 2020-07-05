@@ -203,6 +203,14 @@ const formatLimitData = (opt) => {
   return { ...opt };
 };
 
+const isUndefined = (val) => {
+  return val === undefined || val === '';
+};
+
+const isDate = (str) => {
+  return typeof str !== 'number' && str !== null && new Date(str) != 'Invalid Date';
+};
+
 module.exports = {
   connectionPool,
   writeJson,
@@ -218,5 +226,7 @@ module.exports = {
   formatLimitData,
   decodeBase64,
   encodeBase64,
-  toMd5
+  toMd5,
+  isUndefined,
+  isDate
 };
