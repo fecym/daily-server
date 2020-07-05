@@ -6,7 +6,6 @@ import { Op } from 'sequelize';
 
 export const createRecord = async (req, res) => {
   const { repaymentTime, transferTime, amount, transferName, type } = req.body;
-  console.log('createRecord -> type', type);
 
   try {
     await sequelize.sync({ alter: true });
