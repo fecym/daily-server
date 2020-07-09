@@ -5,7 +5,7 @@ import TransferMoney from '../model/transfer-money';
 import { Op } from 'sequelize';
 
 export const createRecord = async (req, res) => {
-  const { repaymentTime, transferTime, amount, transferName, type } = req.body;
+  const { repaymentTime, transferTime, amount, transferName, type, transferMode, files, remake } = req.body;
 
   try {
     await sequelize.sync({ alter: true });
@@ -14,8 +14,11 @@ export const createRecord = async (req, res) => {
       transfer_name: transferName,
       transfer_time: transferTime,
       repayment_time: type === 1 ? transferTime : repaymentTime || null,
+      transfer_mode: transferMode,
       type,
-      amount
+      amount,
+      files,
+      remake
     });
     writeJson(res, 200, 'ok', true);
   } catch (e) {
@@ -25,7 +28,7 @@ export const createRecord = async (req, res) => {
 };
 
 export const updateTransferInfo = async (req, res) => {
-  const { id, repaymentTime, transferTime, amount, transferName, type } = req.body;
+  const { id, repaymentTime, transferTime, amount, transferName, type, transferMode, files, remake } = req.body;
 
   try {
     TransferMoney.update(
@@ -34,8 +37,11 @@ export const updateTransferInfo = async (req, res) => {
         transfer_name: transferName,
         transfer_time: transferTime,
         repayment_time: repaymentTime,
+        transfer_mode: transferMode,
         type,
-        amount
+        amount,
+        files,
+        remake
       },
       { where: { id } }
     );
