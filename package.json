@@ -26,6 +26,7 @@
     "mysql2": "^2.1.0",
     "nodemon": "^1.19.4",
     "pug": "^2.0.3",
+    "qiniu": "^7.3.2",
     "sequelize": "^6.3.0"
   },
   "devDependencies": {
