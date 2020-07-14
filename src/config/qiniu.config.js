@@ -6,6 +6,7 @@ const secretKey = 'Wh3MBq1_24t-b_OfvP1nYVTBSdfpp7rqkC-OgM2d';
 export default class Uploader {
   constructor(options = {}) {
     const { bucket = 'daily-files' } = options;
+    // const { bucket = 'test-file-service' } = options;
     // 定义鉴权对象mac，文档有
     const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
     // 简单上传的凭证
@@ -36,3 +37,5 @@ export default class Uploader {
     return policy.makeRequest(fileUrl);
   }
 }
+
+// module.exports = Uploader

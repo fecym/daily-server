@@ -16,6 +16,8 @@ export const blogApi = API + '/blog';
 // 汇总相关
 export const summaryApi = API + '/summary';
 export const transferApi = API + '/transfer';
+// 文件相关
+export const fileApi = API + '/file';
 
 module.exports = {
   testApi: API + '/getList',
@@ -63,5 +65,9 @@ module.exports = {
   updateTransferMoneyInfo: transferApi + '/update/record',
   getTransferMoneyInfo: transferApi + '/get/transfer/info',
   findTransferRecordsApi: transferApi + '/get/list',
-  findTransferAllRecordsApi: transferApi + '/get/all/list'
+  findTransferAllRecordsApi: transferApi + '/get/all/list',
+
+  // 文件服务相关
+  fileUploadApi: fileApi + '/upload',
+  fileDownloadApi: fileApi + '/download'
 };

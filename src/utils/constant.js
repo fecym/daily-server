@@ -1,5 +1,4 @@
 import { loginApi, blogSummary } from '../routes/api';
-console.log('loginApi, blogSummary', loginApi, blogSummary);
 export const ERROR_MESSAGE = '服务器异常';
 export const WHITE_LIST = [loginApi, blogSummary];
 

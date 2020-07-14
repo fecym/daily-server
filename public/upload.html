@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #progress {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="file" name="files" id="file" multiple />
+    <input type="submit" name="" id="btn" onclick="uploadImg()" />
+    <progress id="progress" min="0" max="100" value="0">0</progress>
+    <script src="./lib/jquery.min.js"></script>
+    <script>
+      const file = document.getElementById('file')
+      let DATA = {}
+      file.onchange = ev => {
+        if (!!file.files.length) {
+          btn.removeAttribute('disabled')
+        }
+      }
+      function uploadImg() {
+        const xhr = new XMLHttpRequest()
+        // 上传需要用到formData
+        const fd = new FormData()
+        console.log("uploadImg -> file.files", file.files)
+        Array.from(file.files).forEach(f => {
+          fd.append('files', f)
+        })
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              console.log(xhr.response)
+              DATA = JSON.parse(xhr.response)
+              // 扔到宏任务去执行该方法，不然它的执行永远会跑到进度条前面
+              setTimeout( _ => alert('Upload Successify'))
+            }
+          }
+        }
+        // 因为是上传的进度条事件，所以我们需要写在xhr.upload里面监听，因为还会出现下载的进度事件
+        xhr.upload.onprogress = progressEvent
+        xhr.open('POST', '/api/file/upload', true)
+        xhr.send(fd)
+      }
+
+      // 进度条
+      function progressEvent(ev) {
+        console.log(ev)
+        if (ev.lengthComputable) {
+          let complete = ((event.loaded / event.total) * 100) | 0
+          let progress = document.getElementById('progress')
+          progress.value = progress.innerHTML = complete
+        }
+      }
+    </script>
+  </body>
+</html>
