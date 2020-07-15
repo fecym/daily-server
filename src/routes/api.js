@@ -69,5 +69,6 @@ module.exports = {
 
   // 文件服务相关
   fileUploadApi: fileApi + '/upload',
-  fileDownloadApi: fileApi + '/download'
+  fileDownloadApi: fileApi + '/download',
+  fileGetApi: fileApi + '/get'
 };

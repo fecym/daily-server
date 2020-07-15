@@ -32,7 +32,7 @@ import {
 import { createRecord, updateTransferInfo, findTransferRecords, findAllTransferRecords, getTransferInfo } from '../controller/transfer-money';
 
 // 文件相关
-import { uploadFile } from '../controller/files';
+import { uploadFile, getFileInfo } from '../controller/files';
 
 // router.get(api.testApi, test)
 router.post(api.loginApi, Login);
@@ -77,5 +77,6 @@ router.get(api.findTransferRecordsApi, findTransferRecords);
 router.get(api.findTransferAllRecordsApi, findAllTransferRecords);
 
 router.post(api.fileUploadApi, uploadFile);
+router.get(api.fileGetApi, getFileInfo);
 
 export default router;

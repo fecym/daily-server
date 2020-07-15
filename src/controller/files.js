@@ -1,11 +1,13 @@
-import Uploader from '../config/qiniu.config';
+import UploadQiniu from '../config/qiniu.config';
 import formidable from 'formidable';
 import { fileConfig } from '../config/index';
 import { writeJson } from '../utils';
 import { ERROR_MESSAGE } from '../utils/constant';
-console.log('Uploader', Uploader);
+// console.log('UploadQiniu', UploadQiniu);
 
-const uploader = new Uploader();
+const upQiniu = new UploadQiniu({
+  bucket: 'test-file-service'
+});
 
 export async function uploadFile(req, res) {
   // console.log('uploadFile -> req', req);
@@ -20,6 +22,7 @@ export async function uploadFile(req, res) {
 
     // 前端 append 要求 files
     form.parse(req, async (err, fields, { files }) => {
+      console.log('uploadFile -> files', files);
       console.log('uploadFile -> fields', fields);
       if (err) return writeJson(res, 500, ERROR_MESSAGE, null);
       if (!files) return writeJson(res, 400, 'error', '上传失败');
@@ -28,7 +31,7 @@ export async function uploadFile(req, res) {
         const tmp = { ...item };
         // 删除 path 属性，不给前端返回
         delete item.path;
-        return uploader.upload(tmp.name, tmp.path);
+        return upQiniu.upload(tmp.name, tmp.path);
       });
       // 上传七牛
       const uploadQiniu = await Promise.all(promises);
@@ -36,6 +39,18 @@ export async function uploadFile(req, res) {
       writeJson(res, 200, 'ok', file);
     });
   } catch (e) {
+    console.log('uploadFile -> e', e);
+    writeJson(res, 500, ERROR_MESSAGE, null);
+  }
+}
+
+export async function getFileInfo(req, res) {
+  try {
+    const { filename } = req;
+    const data = await upQiniu.getFileInfo(filename);
+    writeJson(res, 200, 'ok', data);
+  } catch (e) {
+    console.log('getFileInfo -> e', e);
     writeJson(res, 500, ERROR_MESSAGE, null);
   }
 }

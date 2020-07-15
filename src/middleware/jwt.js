@@ -3,7 +3,7 @@ import { verifyToken, writeJson } from '../utils';
 import { WHITE_LIST } from '../utils/constant';
 
 export default (req, res, next) => {
-  console.log('req.url', req.url);
+  // console.log('req.url', req.url);
   if (WHITE_LIST.some(u => u === req.url) || req.url.indexOf('.html')) {
     return next();
   } else {
