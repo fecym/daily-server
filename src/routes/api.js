@@ -66,6 +66,7 @@ module.exports = {
   getTransferMoneyInfo: transferApi + '/get/transfer/info',
   findTransferRecordsApi: transferApi + '/get/list',
   findTransferAllRecordsApi: transferApi + '/get/all/list',
+  addTransferFiles: transferApi + '/file/add',
 
   // 文件服务相关
   fileUploadApi: fileApi + '/upload',

@@ -1,6 +1,6 @@
-import { loginApi, blogSummary } from '../routes/api';
+import { loginApi, blogSummary, addTransferFiles } from '../routes/api';
 export const ERROR_MESSAGE = '服务器异常';
-export const WHITE_LIST = [loginApi, blogSummary];
+export const WHITE_LIST = [loginApi, blogSummary, addTransferFiles];
 
 // 表名
 export const TABLE_NAME = {

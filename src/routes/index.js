@@ -30,6 +30,7 @@ import {
 
 // 转账
 import { createRecord, updateTransferInfo, findTransferRecords, findAllTransferRecords, getTransferInfo } from '../controller/transfer-money';
+import { createTransferFile } from '../controller/transfer-file';
 
 // 文件相关
 import { uploadFile, getFileInfo } from '../controller/files';
@@ -75,6 +76,7 @@ router.post(api.updateTransferMoneyInfo, updateTransferInfo);
 router.get(api.getTransferMoneyInfo, getTransferInfo);
 router.get(api.findTransferRecordsApi, findTransferRecords);
 router.get(api.findTransferAllRecordsApi, findAllTransferRecords);
+router.get(api.addTransferFiles, createTransferFile);
 
 router.post(api.fileUploadApi, uploadFile);
 router.get(api.fileGetApi, getFileInfo);

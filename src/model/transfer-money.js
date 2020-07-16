@@ -24,5 +24,5 @@ TransferMoney.init(
     // files: DataTypes.ARRAY,
     remake: DataTypes.STRING
   },
-  { sequelize, modelName: 'transfer_money', tableName: 'transfer_money' }
+  { sequelize, modelName: 'TransferMoney', tableName: 'transfer_money', paranoid: true, timestamps: true }
 );

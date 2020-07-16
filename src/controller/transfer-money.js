@@ -3,24 +3,31 @@ import { ERROR_MESSAGE } from '../utils/constant';
 import { sequelize } from '../config/sequelize';
 import TransferMoney from '../model/transfer-money';
 import { Op } from 'sequelize';
-
+import { createTransferFile2 } from './transfer-file';
 export const createRecord = async (req, res) => {
-  const { repaymentTime, transferTime, amount, transferName, type, transferMode, files, remake } = req.body;
-
+  const { repaymentTime, transferTime: transfer_time, amount, transferName: transfer_name, type, transferMode: transfer_mode, files, remake, fileList } = req.body;
+  const user_id = req.uid;
   try {
     await sequelize.sync({ alter: true });
-    TransferMoney.create({
-      user_id: req.uid,
-      transfer_name: transferName,
-      transfer_time: transferTime,
-      repayment_time: type === 1 ? transferTime : repaymentTime || null,
-      transfer_mode: transferMode,
+    const result = await TransferMoney.create({
+      user_id,
+      transfer_name,
+      transfer_time,
+      transfer_mode,
       type,
       amount,
       files,
-      remake
+      remake,
+      repayment_time: type === 1 ? transfer_time : repaymentTime || null
     });
-    writeJson(res, 200, 'ok', true);
+    const transfer_id = result.id;
+    console.log('createRecord -> result', result.id);
+    // 处理截图
+    fileList.forEach(file => {
+      const { name, size, mtime, type, hash } = file;
+      createTransferFile2({ user_id, name, size, mtime, type, hash, transfer_id });
+    });
+    writeJson(res, 200, 'ok', result);
   } catch (e) {
     console.log('TransferMoney -> e', e);
     writeJson(res, 500, ERROR_MESSAGE, null);
@@ -61,7 +68,7 @@ export const getTransferInfo = async (req, res) => {
       }
     });
     const r = {};
-    Object.entries(dataValues).forEach((val) => {
+    Object.entries(dataValues).forEach(val => {
       if (isDate(val[1])) {
         val[1] = parseTime(val[1]);
       }
@@ -96,7 +103,7 @@ export const findTransferRecords = async (req, res) => {
       }
     };
 
-    Object.keys(where).forEach((key) => {
+    Object.keys(where).forEach(key => {
       if (isUndefined(req.query[toHump(key)])) {
         delete where[key];
       }
@@ -112,7 +119,7 @@ export const findTransferRecords = async (req, res) => {
     const result = await TransferMoney.findAll({ where, ...otherConf });
     const list = result.map(({ dataValues }) => {
       const map = {};
-      Object.entries(dataValues).forEach((val) => {
+      Object.entries(dataValues).forEach(val => {
         if (isDate(val[1])) {
           val[1] = parseTime(val[1]);
         }
@@ -149,7 +156,7 @@ export const findAllTransferRecords = async (req, res) => {
       }
     };
 
-    Object.keys(where).forEach((key) => {
+    Object.keys(where).forEach(key => {
       if (isUndefined(req.query[toHump(key)])) {
         delete where[key];
       }
@@ -162,7 +169,7 @@ export const findAllTransferRecords = async (req, res) => {
     const result = await TransferMoney.findAll({ where, order: [['transfer_time', 'DESC']] });
     const list = result.map(({ dataValues }) => {
       const map = {};
-      Object.entries(dataValues).forEach((val) => {
+      Object.entries(dataValues).forEach(val => {
         if (isDate(val[1])) {
           val[1] = parseTime(val[1]);
         }
