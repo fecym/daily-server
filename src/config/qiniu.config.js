@@ -1,11 +1,11 @@
 const qiniu = require('qiniu');
 const accessKey = 'OautsMKxZckNNUZJv1z3__8s1agvxTgvGLkvPru8';
 const secretKey = 'Wh3MBq1_24t-b_OfvP1nYVTBSdfpp7rqkC-OgM2d';
-
+const { isProd } = '../utils';
 // test-file-service
 export default class UploadQiniu {
   constructor(options = {}) {
-    const { bucket = 'daily-files' } = options;
+    const { bucket = isProd ? 'daily-files' : 'test-file-service' } = options;
     this.bucket = bucket;
     // 定义鉴权对象mac，文档有
     const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);

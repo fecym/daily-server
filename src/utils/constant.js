@@ -1,6 +1,6 @@
-import { loginApi, blogSummary, addTransferFiles } from '../routes/api';
+import { loginApi, blogSummary } from '../routes/api';
 export const ERROR_MESSAGE = '服务器异常';
-export const WHITE_LIST = [loginApi, blogSummary, addTransferFiles];
+export const WHITE_LIST = [loginApi, blogSummary];
 
 // 表名
 export const TABLE_NAME = {
@@ -44,3 +44,7 @@ export const consumeAmountField = [
   'shopping_price'
 ];
 export const consumeAmountFieldStr = consumeAmountField.join(',');
+
+export const isProd = process.env.NODE_ENV === 'production';
+
+export const filePath = isProd ? 'http://files.chengyuming.cn' : 'http://file-test.chengyuming.cn';

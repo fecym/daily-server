@@ -3,8 +3,8 @@ import { verifyToken, writeJson } from '../utils';
 import { WHITE_LIST } from '../utils/constant';
 
 export default (req, res, next) => {
-  // console.log('req.url', req.url);
-  if (WHITE_LIST.some(u => u === req.url) || req.url.indexOf('.html')) {
+  const currentUrl = req.url;
+  if (WHITE_LIST.some(white => white.includes(currentUrl)) || currentUrl.indexOf('.html') !== -1) {
     return next();
   } else {
     const authorization = req.headers['authorization'];
@@ -16,6 +16,7 @@ export default (req, res, next) => {
     } else {
       // 向后传递消息
       req.uid = verifyToken(authorization)['uid'];
+      console.log('req.uid', req.uid);
       req.username = verifyToken(authorization)['username'];
       // 查一次库，确保该 token 用户存在
       return next();

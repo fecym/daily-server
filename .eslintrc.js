@@ -18,6 +18,7 @@ module.exports = {
     // 自定义规则
     'no-param-reassign': 'off',
     'no-return-assign': 'off',
-    'guard-for-in': 'off'
+    'guard-for-in': 'off',
+    'no-async-promise-executor': 'off'
   }
 };

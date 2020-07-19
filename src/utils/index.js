@@ -43,7 +43,7 @@ const connectionPool = (sql, options) => {
  *
  * @param {*} code
  */
-const decodeBase64 = (code) => {
+const decodeBase64 = code => {
   return Base64.decode(code);
 };
 
@@ -51,7 +51,7 @@ const decodeBase64 = (code) => {
  *
  * @param {*} code
  */
-const encodeBase64 = (code) => {
+const encodeBase64 = code => {
   return Base64.encode(code);
 };
 
@@ -59,7 +59,7 @@ const encodeBase64 = (code) => {
  * 密码转 md5
  * @param {*} code
  */
-const toMd5 = (code) => {
+const toMd5 = code => {
   return crypto.createHash('md5').update(code).digest('hex');
 };
 
@@ -67,7 +67,7 @@ const toMd5 = (code) => {
  * @description {生成token}
  * @param {传入的数据} data
  */
-const generateToken = (data) => {
+const generateToken = data => {
   let privateKey = fs.readFileSync(path.resolve(__dirname, '../rsa_key/rsa_private_key.pem'));
   // 签发token，接受三个参数，载荷、私钥和一些配置
   return jwt.sign({ data }, privateKey, {
@@ -81,7 +81,7 @@ const generateToken = (data) => {
  * @description {校验token是否正确}
  * @param {获取到的 Bearer token} token
  */
-const verifyToken = (token) => {
+const verifyToken = token => {
   if (!token) return false;
   // 不要Bearer和空格，处理下token
   token = token.slice(7);
@@ -120,7 +120,7 @@ const writeJson = (res, code = 200, msg = 'ok', data = null) => {
  * @description {下划线转换驼峰}
  * @param {要转换的下划线格式名字} name
  */
-const toHump = (name) => {
+const toHump = name => {
   return name.replace(/\_(\w)/g, function (all, letter) {
     return letter.toUpperCase();
   });
@@ -129,7 +129,7 @@ const toHump = (name) => {
  * @description {驼峰转换下划线}
  * @param {要转换的驼峰格式名字} name
  */
-const toLine = (name) => {
+const toLine = name => {
   return name.replace(/([A-Z])/g, '_$1').toLowerCase();
 };
 
@@ -142,8 +142,8 @@ const toLine = (name) => {
 const dealUpdateSql = (fieldList, body) => {
   const bodys = Object.entries(body);
   let str = '';
-  fieldList.forEach((fieldname) => {
-    bodys.forEach((item) => {
+  fieldList.forEach(fieldname => {
+    bodys.forEach(item => {
       if (fieldname === toLine(item[0])) {
         if (fieldname !== 'id' && fieldname !== 'password') {
           str += toLine(item[0]) + "='" + item[1] + "',";
@@ -163,8 +163,8 @@ const dealUpdateSql = (fieldList, body) => {
  * @description {时间格式化}
  * @param {SQL返回的数据记录} rows
  */
-const formatData = (rows) => {
-  return rows.map((row) => {
+const formatData = rows => {
+  return rows.map(row => {
     let date = moment(row.create_time).format('YYYY-MM-DD HH:mm:ss');
     return { ...row, create_time: date };
   });
@@ -183,7 +183,7 @@ const parseTime = (data, format = 'YYYY-MM-DD HH:mm:ss') => {
  * @description {判断对象是否是空对象}
  * @param {要判断的对象} object
  */
-const isEmptyObject = (object) => {
+const isEmptyObject = object => {
   if (Object.keys(object).length === 0) {
     return true;
   } else {
@@ -197,19 +197,21 @@ const limitSearch = (page, size) => {
   return [fromSize, size];
 };
 
-const formatLimitData = (opt) => {
+const formatLimitData = opt => {
   const { list, page, size, fromSize, total } = opt;
   if (!list || !page || !size || fromSize === undefined || total === undefined) return false;
   return { ...opt };
 };
 
-const isUndefined = (val) => {
+const isUndefined = val => {
   return val === undefined || val === '';
 };
 
-const isDate = (str) => {
+const isDate = str => {
   return typeof str !== 'number' && str !== null && new Date(str) != 'Invalid Date';
 };
+
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   connectionPool,
@@ -228,5 +230,6 @@ module.exports = {
   encodeBase64,
   toMd5,
   isUndefined,
-  isDate
+  isDate,
+  isProd
 };

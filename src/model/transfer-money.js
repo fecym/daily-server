@@ -20,8 +20,7 @@ TransferMoney.init(
     amount: DataTypes.INTEGER,
     // 转账方式：1：微信；2：支付宝；3：银行卡
     transfer_mode: { type: DataTypes.INTEGER, hasComment: { comment: '转账方式：1：微信；2：支付宝；3：银行卡' } },
-    // TODO： 文件这个问题，随后再说
-    // files: DataTypes.ARRAY,
+    fileIds: DataTypes.STRING,
     remake: DataTypes.STRING
   },
   { sequelize, modelName: 'TransferMoney', tableName: 'transfer_money', paranoid: true, timestamps: true }

@@ -30,10 +30,10 @@ import {
 
 // 转账
 import { createRecord, updateTransferInfo, findTransferRecords, findAllTransferRecords, getTransferInfo } from '../controller/transfer-money';
-import { createTransferFile } from '../controller/transfer-file';
 
 // 文件相关
-import { uploadFile, getFileInfo } from '../controller/files';
+// import { uploadFile, getFileInfoByLocal } from '../controller/files';
+import { uploadFile } from '../controller/files';
 
 // router.get(api.testApi, test)
 router.post(api.loginApi, Login);
@@ -76,9 +76,9 @@ router.post(api.updateTransferMoneyInfo, updateTransferInfo);
 router.get(api.getTransferMoneyInfo, getTransferInfo);
 router.get(api.findTransferRecordsApi, findTransferRecords);
 router.get(api.findTransferAllRecordsApi, findAllTransferRecords);
-router.get(api.addTransferFiles, createTransferFile);
+// router.get(api.addTransferFiles, createFile);
 
 router.post(api.fileUploadApi, uploadFile);
-router.get(api.fileGetApi, getFileInfo);
+// router.get(api.fileGetApi, getFileInfoByLocal);
 
 export default router;

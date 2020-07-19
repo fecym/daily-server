@@ -3,12 +3,13 @@ import { ERROR_MESSAGE } from '../utils/constant';
 import { sequelize } from '../config/sequelize';
 import TransferMoney from '../model/transfer-money';
 import { Op } from 'sequelize';
-import { createTransferFile2 } from './transfer-file';
+import { getFileInfoById } from './files';
 export const createRecord = async (req, res) => {
-  const { repaymentTime, transferTime: transfer_time, amount, transferName: transfer_name, type, transferMode: transfer_mode, files, remake, fileList } = req.body;
+  const { repaymentTime, transferTime: transfer_time, amount, transferName: transfer_name, type, transferMode: transfer_mode, remake, fileIds } = req.body;
   const user_id = req.uid;
   try {
     await sequelize.sync({ alter: true });
+    // await sequelize.sync();
     const result = await TransferMoney.create({
       user_id,
       transfer_name,
@@ -16,16 +17,9 @@ export const createRecord = async (req, res) => {
       transfer_mode,
       type,
       amount,
-      files,
+      fileIds,
       remake,
       repayment_time: type === 1 ? transfer_time : repaymentTime || null
-    });
-    const transfer_id = result.id;
-    console.log('createRecord -> result', result.id);
-    // 处理截图
-    fileList.forEach(file => {
-      const { name, size, mtime, type, hash } = file;
-      createTransferFile2({ user_id, name, size, mtime, type, hash, transfer_id });
     });
     writeJson(res, 200, 'ok', result);
   } catch (e) {
@@ -35,7 +29,7 @@ export const createRecord = async (req, res) => {
 };
 
 export const updateTransferInfo = async (req, res) => {
-  const { id, repaymentTime, transferTime, amount, transferName, type, transferMode, files, remake } = req.body;
+  const { id, repaymentTime, transferTime, amount, transferName, type, transferMode, fileIds, remake } = req.body;
 
   try {
     TransferMoney.update(
@@ -47,7 +41,7 @@ export const updateTransferInfo = async (req, res) => {
         transfer_mode: transferMode,
         type,
         amount,
-        files,
+        fileIds,
         remake
       },
       { where: { id } }
@@ -74,6 +68,10 @@ export const getTransferInfo = async (req, res) => {
       }
       r[toHump(val[0])] = val[1];
     });
+    const fileIds = JSON.parse(r.fileIds);
+    const fileListPromises = fileIds.map(id => getFileInfoById(id));
+    r.fileList = await Promise.all(fileListPromises);
+    // console.log("getTransferInfo -> fileList", fileListPromises)
     writeJson(res, 200, 'ok', r);
   } catch (e) {
     console.log('getTransferInfo -> e', e);
