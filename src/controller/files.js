@@ -6,7 +6,9 @@ import { ERROR_MESSAGE, filePath } from '../utils/constant';
 import { sequelize } from '../config/sequelize';
 import FileModel from '../model/file';
 import { Op } from 'sequelize';
-const upQiniu = new UploadQiniu();
+
+const bucket = isProd ? 'daily-files' : 'test-file-service';
+const upQiniu = new UploadQiniu({ bucket });
 
 /**
  * 文件写入SQL，返回文件写入SQL后的信息，对内服务

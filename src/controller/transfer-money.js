@@ -69,8 +69,11 @@ export const getTransferInfo = async (req, res) => {
       r[toHump(val[0])] = val[1];
     });
     const fileIds = JSON.parse(r.fileIds);
-    const fileListPromises = fileIds.map(id => getFileInfoById(id));
-    r.fileList = await Promise.all(fileListPromises);
+    if (fileIds) {
+      console.log('getTransferInfo -> fileIds', fileIds);
+      const fileListPromises = fileIds.map(id => getFileInfoById(id));
+      r.fileList = await Promise.all(fileListPromises);
+    }
     // console.log("getTransferInfo -> fileList", fileListPromises)
     writeJson(res, 200, 'ok', r);
   } catch (e) {
