@@ -27,7 +27,7 @@ export const Login = async (req, res, next) => {
       response.update_time = parseTime(response.update_time);
       response.create_time = parseTime(response.create_time);
       const result = {};
-      Object.entries(response).forEach((item) => {
+      Object.entries(response).forEach(item => {
         result[toHump(item[0])] = item[1];
       });
       // 不返密码字段
@@ -59,7 +59,7 @@ export const UpdateInfo = async (req, res, next) => {
     const data = await connectionPool(showAllFieldName, ['user', 'daily']);
     const body = req.body;
     // 处理字段名称
-    const fieldList = data.map((item) => item.Field);
+    const fieldList = data.map(item => item.Field);
     const dealData = dealUpdateSql(fieldList, body);
     const _sql = 'UPDATE user SET ' + dealData + ' WHERE id=' + body.id;
     await connectionPool(_sql);
@@ -119,9 +119,9 @@ export const queryAccountsList = async (req, res, next) => {
     const result = await connectionPool(_sql, ['user', 'username', 'realname', 'realname']);
     if (result && result.length) {
       const list = [];
-      result.forEach((item) => {
+      result.forEach(item => {
         const _result = {};
-        Object.entries(item).forEach((_item) => {
+        Object.entries(item).forEach(_item => {
           if (_item[0] === 'create_time' || _item[0] === 'update_time') {
             _item[1] = parseTime(_item[1]);
           }
@@ -163,7 +163,7 @@ export const createAccount = async (req, res, next) => {
   try {
     const data = await connectionPool(showAllFieldName, ['user', 'daily']);
     // 处理字段名称
-    const fieldList = data.map((item) => item.Field);
+    const fieldList = data.map(item => item.Field);
     const dealData = dealUpdateSql(fieldList, req.body);
     const _sql = `INSERT INTO ?? SET ${dealData};`;
     const _data = await connectionPool(_sql, ['user']);
@@ -186,6 +186,19 @@ export const switchGuideFeature = async (req, res, next) => {
   } catch (error) {
     console.log('switchGuideFeature -> error', error);
     writeJson(res, 200, 'ok', false);
+  }
+};
+
+export const updateUserAvatar = async (req, res, next) => {
+  const { headPic } = req.body;
+  // if (!isValidURL(headPic)) return writeJson(res, 400, '图片格式不正确', false);
+  const _sql = `UPDATE user SET head_pic = ? WHERE id = ?;`;
+  try {
+    await connectionPool(_sql, [headPic, req.uid]);
+    writeJson(res, 200, 'ok', true);
+  } catch (error) {
+    console.log('switchGuideFeature -> error', error);
+    writeJson(res, 500, ERROR_MESSAGE, null);
   }
 };
 

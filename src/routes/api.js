@@ -32,6 +32,7 @@ module.exports = {
   // 新增用户
   createAccountApi: userApi + '/add/account',
   switchGuideApi: userApi + '/switch/guide',
+  updateAvatarApi: userApi + '/update/avatar',
   testInfo: API + '/testInfo',
   // 查询消费记录
   findConsumeListApi: consumeApi + '/findConsumeList',

@@ -13,7 +13,7 @@ import api from './api';
 // import * as testHello  from '../controller/test'
 // console.log(testHello.default, 'test')
 // 登录，登出接口
-import { Login, UpdateInfo, updatePassword, queryAccountsList, createAccount, switchGuideFeature } from '../controller/user';
+import { Login, UpdateInfo, updatePassword, queryAccountsList, createAccount, switchGuideFeature, updateUserAvatar } from '../controller/user';
 // 消费接口类
 import { getAddress, findConsumeList, addConsumeInfo, updateConsumeInfo, getAllConsumeList, currentMonthStatistics, summaryMonthAmounts } from '../controller/consume';
 // 博客相关
@@ -44,6 +44,7 @@ router.post(api.updatePasswordApi, updatePassword);
 router.get(api.getAccountsApi, queryAccountsList);
 router.post(api.createAccountApi, createAccount);
 router.post(api.switchGuideApi, switchGuideFeature);
+router.post(api.updateAvatarApi, updateUserAvatar);
 
 // router.post(api.testInfo, testInfo)
 
