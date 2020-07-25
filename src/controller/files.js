@@ -1,11 +1,12 @@
 import UploadQiniu from '../config/qiniu.config';
 import formidable from 'formidable';
 import { fileConfig } from '../config/index';
-import { writeJson, isProd, isDate, toHump, parseTime } from '../utils';
+import { writeJson, isProd, isDate, isUndefined, toHump, parseTime } from '../utils';
 import { ERROR_MESSAGE, filePath } from '../utils/constant';
 import { sequelize } from '../config/sequelize';
 import FileModel from '../model/file';
 import { Op } from 'sequelize';
+import { getUserInfoById } from './user';
 
 const bucket = isProd ? 'daily-files' : 'test-file-service';
 const upQiniu = new UploadQiniu({ bucket });
@@ -129,6 +130,63 @@ export async function getFileInfoByQiniu(req, res) {
   }
 }
 
+export async function getFileListByAuth(req, res) {
+  try {
+    let { name, createAt, userId, page = 1, size = 5 } = req.query;
+    const userInfo = await getUserInfoById(req.uid);
+    if (Number(userInfo.role) !== 2) {
+      userId = req.uid;
+    }
+    const where = {
+      name: {
+        [Op.like]: `%${name}%`
+      },
+      createAt: {
+        [Op.eq]: createAt
+      }
+    };
+
+    Object.keys(where).forEach(key => {
+      console.log('getFileListByAuth -> req.query[key]', key, req.query[key]);
+      if (isUndefined(req.query[key])) {
+        delete where[key];
+      }
+    });
+    userId &&
+      (where.user_id = {
+        [Op.eq]: userId
+      });
+    console.log('getFileListByAuth -> where', where);
+
+    const otherConf = {
+      order: [['createdAt', 'DESC']],
+      offset: (page - 1) * size,
+      limit: Number(size)
+    };
+
+    const result = await FileModel.findAll({ where, ...otherConf });
+    const list = result.map(({ dataValues }) => {
+      const map = {};
+      Object.entries(dataValues).forEach(val => {
+        if (isDate(val[1])) {
+          val[1] = parseTime(val[1]);
+        }
+        map[toHump(val[0])] = val[1];
+      });
+      return map;
+    });
+    const total = await FileModel.count({ where, ...otherConf });
+    writeJson(res, 200, 'ok', { list, size, page, total });
+  } catch (e) {
+    console.log('getFileListByAuth -> e', e);
+    writeJson(res, 500, ERROR_MESSAGE, null);
+  }
+}
+
+/**
+ * 内部使用
+ * @param {*} fileId
+ */
 export function getFileInfoById(fileId) {
   return new Promise(async (resolve, reject) => {
     try {

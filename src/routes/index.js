@@ -13,7 +13,7 @@ import api from './api';
 // import * as testHello  from '../controller/test'
 // console.log(testHello.default, 'test')
 // 登录，登出接口
-import { Login, UpdateInfo, updatePassword, queryAccountsList, createAccount, switchGuideFeature, updateUserAvatar } from '../controller/user';
+import { Login, UpdateInfo, updatePassword, queryAccountsList, createAccount, switchGuideFeature, updateUserAvatar, getUserSelectNames } from '../controller/user';
 // 消费接口类
 import { getAddress, findConsumeList, addConsumeInfo, updateConsumeInfo, getAllConsumeList, currentMonthStatistics, summaryMonthAmounts } from '../controller/consume';
 // 博客相关
@@ -33,7 +33,7 @@ import { createRecord, updateTransferInfo, findTransferRecords, findAllTransferR
 
 // 文件相关
 // import { uploadFile, getFileInfoByLocal } from '../controller/files';
-import { uploadFile } from '../controller/files';
+import { uploadFile, getFileListByAuth } from '../controller/files';
 
 // router.get(api.testApi, test)
 router.post(api.loginApi, Login);
@@ -45,6 +45,7 @@ router.get(api.getAccountsApi, queryAccountsList);
 router.post(api.createAccountApi, createAccount);
 router.post(api.switchGuideApi, switchGuideFeature);
 router.post(api.updateAvatarApi, updateUserAvatar);
+router.get(api.getSelectNamesApi, getUserSelectNames);
 
 // router.post(api.testInfo, testInfo)
 
@@ -80,6 +81,6 @@ router.get(api.findTransferAllRecordsApi, findAllTransferRecords);
 // router.get(api.addTransferFiles, createFile);
 
 router.post(api.fileUploadApi, uploadFile);
-// router.get(api.fileGetApi, getFileInfoByLocal);
+router.get(api.fileGetListApi, getFileListByAuth);
 
 export default router;

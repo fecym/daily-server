@@ -202,6 +202,45 @@ export const updateUserAvatar = async (req, res, next) => {
   }
 };
 
+export const getUserInfoById = userId => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const _sql = `SELECT * FROM user where id = ?;`;
+      const result = await connectionPool(_sql, userId);
+      return resolve(result[0]);
+    } catch (e) {
+      return reject(e);
+    }
+  });
+};
+
+export const getUserSelectNames = async (req, res, next) => {
+  const userId = req.uid;
+  const _sql = `SELECT id, username, realname, nickname, role FROM user;`;
+  try {
+    const list = await connectionPool(_sql);
+    const currentLoginUser = list.find(user => user.id === userId);
+    // console.log('getUserSelectNames -> currentLoginUser', currentLoginUser);
+    if (currentLoginUser.role === 2) {
+      const r = list.map(x => ({
+        label: x.realname,
+        value: x.id
+      }));
+      return writeJson(res, 200, 'ok', r);
+    } else {
+      return writeJson(res, 200, 'ok', [
+        {
+          label: currentLoginUser.realname,
+          value: currentLoginUser.id
+        }
+      ]);
+    }
+  } catch (error) {
+    console.log('switchGuideFeature -> error', error);
+    writeJson(res, 500, ERROR_MESSAGE, null);
+  }
+};
+
 // module.exports = {
 //   Login,
 //   UpdateInfo,

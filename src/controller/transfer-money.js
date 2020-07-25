@@ -132,6 +132,7 @@ export const findTransferRecords = async (req, res) => {
     writeJson(res, 200, 'ok', { list, size, page, total });
   } catch (e) {
     console.log('findTransferRecords -> e', e);
+    writeJson(res, 500, ERROR_MESSAGE, null);
   }
 };
 

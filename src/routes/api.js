@@ -33,6 +33,7 @@ module.exports = {
   createAccountApi: userApi + '/add/account',
   switchGuideApi: userApi + '/switch/guide',
   updateAvatarApi: userApi + '/update/avatar',
+  getSelectNamesApi: userApi + '/get/select/names',
   testInfo: API + '/testInfo',
   // 查询消费记录
   findConsumeListApi: consumeApi + '/findConsumeList',
@@ -71,5 +72,6 @@ module.exports = {
   // 文件服务相关
   fileUploadApi: fileApi + '/upload',
   fileDownloadApi: fileApi + '/download',
+  fileGetListApi: fileApi + '/get/list',
   fileGetApi: fileApi + '/get'
 };
