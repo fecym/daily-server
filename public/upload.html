@@ -17,44 +17,46 @@
     <progress id="progress" min="0" max="100" value="0">0</progress>
     <script src="./lib/jquery.min.js"></script>
     <script>
-      const file = document.getElementById('file')
-      let DATA = {}
+      const file = document.getElementById('file');
+      const token = `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVpZCI6MiwidXNlcm5hbWUiOiJjeW0ifSwiaWF0IjoxNTk1NzcyODA3LCJleHAiOjE1OTU4NTkyMDd9.LahaEJssfuCn1s9zhlBEmmQ6b8cFPsA73Y5evShUmqIJznuEQRmud8RkPViIHbU-mgWdM8oJyJh8pRTBVv-REuRI9WaSVms3MFTkcVkwas9ZYaE3UfZ_M-6Uil5faLH8K7baxklouEmQ0nxsG8UM6D23JwrzfrB7w8-oJKGxKGhvou0IwI5h5au-2WZz4vXLLX8rKhwKVncIn-g4PLT9jSdHDrZZwRMj_AOERFZfj6LjqWht6QcINDqCliB6bZ4myfYZ8N6mty9On-570yEBzky-O7BCESdQBSEORc4U9VYQfQstK9xBaNoNx155WYhuwvfS1t90Am2VrN7Go_6fFw`;
+      let DATA = {};
       file.onchange = ev => {
         if (!!file.files.length) {
-          btn.removeAttribute('disabled')
+          btn.removeAttribute('disabled');
         }
-      }
+      };
       function uploadImg() {
-        const xhr = new XMLHttpRequest()
+        const xhr = new XMLHttpRequest();
         // 上传需要用到formData
-        const fd = new FormData()
-        console.log("uploadImg -> file.files", file.files)
+        const fd = new FormData();
+        console.log('uploadImg -> file.files', file.files);
         Array.from(file.files).forEach(f => {
-          fd.append('files', f)
-        })
-        xhr.onreadystatechange = function() {
+          fd.append('files', f);
+        });
+        xhr.onreadystatechange = function () {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-              console.log(xhr.response)
-              DATA = JSON.parse(xhr.response)
+              console.log(xhr.response);
+              DATA = JSON.parse(xhr.response);
               // 扔到宏任务去执行该方法，不然它的执行永远会跑到进度条前面
-              setTimeout( _ => alert('Upload Successify'))
+              setTimeout(_ => alert('Upload Successify'));
             }
           }
-        }
+        };
         // 因为是上传的进度条事件，所以我们需要写在xhr.upload里面监听，因为还会出现下载的进度事件
-        xhr.upload.onprogress = progressEvent
-        xhr.open('POST', '/api/file/upload', true)
-        xhr.send(fd)
+        xhr.upload.onprogress = progressEvent;
+        xhr.open('POST', '/api/file/upload', true);
+        xhr.setRequestHeader('Authorization', token);
+        xhr.send(fd);
       }
 
       // 进度条
       function progressEvent(ev) {
-        console.log(ev)
+        console.log(ev);
         if (ev.lengthComputable) {
-          let complete = ((event.loaded / event.total) * 100) | 0
-          let progress = document.getElementById('progress')
-          progress.value = progress.innerHTML = complete
+          let complete = ((event.loaded / event.total) * 100) | 0;
+          let progress = document.getElementById('progress');
+          progress.value = progress.innerHTML = complete;
         }
       }
     </script>

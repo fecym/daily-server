@@ -16,7 +16,7 @@ export default (req, res, next) => {
     } else {
       // 向后传递消息
       req.uid = verifyToken(authorization)['uid'];
-      console.log('req.uid', req.uid);
+      // console.log('req.uid', req.uid);
       req.username = verifyToken(authorization)['username'];
       // 查一次库，确保该 token 用户存在
       return next();

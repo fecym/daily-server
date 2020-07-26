@@ -24,7 +24,9 @@ FileModel.init(
     lastModifiedDate: { type: DataTypes.DATE, allowNull: true },
     // mtime: { type: DataTypes.DATE, allowNull: true },
     type: DataTypes.STRING,
-    hash: DataTypes.STRING
+    hash: DataTypes.STRING,
+    qiniuHash: DataTypes.STRING,
+    qiniuKey: DataTypes.STRING
     // 外键
     // transfer_id: {
     //   type: DataTypes.INTEGER,

@@ -15,12 +15,12 @@ const upQiniu = new UploadQiniu({ bucket });
  * 文件写入SQL，返回文件写入SQL后的信息，对内服务
  * @param {*} params
  */
-export const createFile2 = ({ user_id, name, size, lastModifiedDate, path, url, type, hash }) => {
+export const createFile2 = ({ user_id, name, size, lastModifiedDate, path, url, type, hash, qiniuHash, qiniuKey }) => {
   return new Promise(async (resole, reject) => {
     try {
       await sequelize.sync({ alter: true });
       // await sequelize.sync();
-      const { dataValues } = await FileModel.create({ user_id, name, size, lastModifiedDate, path, url, type, hash });
+      const { dataValues } = await FileModel.create({ user_id, name, size, lastModifiedDate, path, url, type, hash, qiniuHash, qiniuKey });
       delete dataValues.path;
       return resole(dataValues);
     } catch (e) {
@@ -102,13 +102,18 @@ export async function uploadFile(req, res) {
 
     // 前端 append 要求 files，貌似只会获取到单个
     form.parse(req, async (err, fields, { files }) => {
-      // console.log('uploadFile -> files', files);
       // console.log('uploadFile -> fields', fields);
-      if (err) return writeJson(res, 500, ERROR_MESSAGE, null);
+      if (err) {
+        console.log('uploadFile -> err', err);
+        return writeJson(res, 500, ERROR_MESSAGE, null);
+      }
       if (!files) return writeJson(res, 400, 'error', '上传失败');
       files.url = filePath + '/' + files.name;
-      // 异步上传七牛
-      upQiniu.upload(files.name, files.path);
+      // 等待七牛的上传
+      const qiniuInfo = await upQiniu.upload(files.name, files.path);
+      console.log('uploadFile -> qiniuInfo', qiniuInfo);
+      files.qiniuHash = qiniuInfo.hash;
+      files.qiniuKey = qiniuInfo.key;
       // 同步写入SQL
       const data = await createFile2({ ...files, user_id });
       writeJson(res, 200, 'ok', data);
