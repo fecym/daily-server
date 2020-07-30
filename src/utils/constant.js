@@ -47,4 +47,4 @@ export const consumeAmountFieldStr = consumeAmountField.join(',');
 
 export const isProd = process.env.NODE_ENV === 'production';
 
-export const filePath = isProd ? 'http://files.chengyuming.cn' : 'http://file-test.chengyuming.cn';
+export const FILE_QINIU_CDN = isProd ? 'http://files.chengyuming.cn' : 'http://file-test.chengyuming.cn';

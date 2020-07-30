@@ -1,12 +1,14 @@
 import UploadQiniu from '../config/qiniu.config';
 import formidable from 'formidable';
 import { fileConfig } from '../config/index';
-import { writeJson, isProd, isDate, isUndefined, toHump, parseTime } from '../utils';
-import { ERROR_MESSAGE, filePath } from '../utils/constant';
+import { writeJson, isProd, isDate, isUndefined, toHump, parseTime } from '../utils/index';
+import { ERROR_MESSAGE, FILE_QINIU_CDN } from '../utils/constant';
 import { sequelize } from '../config/sequelize';
 import FileModel from '../model/file';
 import { Op } from 'sequelize';
 import { getUserInfoById } from './user';
+import fs from 'fs';
+import fsPath from 'path';
 
 const bucket = isProd ? 'daily-files' : 'test-file-service';
 const upQiniu = new UploadQiniu({ bucket });
@@ -55,7 +57,7 @@ export async function uploadFile2(req, res) {
       const qiniuPromises = [];
       const sqlPromises = [];
       file.forEach(item => {
-        item.url = filePath + '/' + item.name;
+        item.url = FILE_QINIU_CDN + '/' + item.name;
         // 写入SQL
         const sqlFile = createFile2({ ...item, user_id });
         const fileQiniu = upQiniu.upload(item.name, item.path);
@@ -91,37 +93,77 @@ export async function uploadFile2(req, res) {
  */
 export async function uploadFile(req, res) {
   const user_id = req.uid;
-  try {
-    // const isDev = req.app.get('env') === 'development';
-    const form = formidable({
-      multiples: true,
-      keepExtensions: true,
-      hash: 'sha1',
-      uploadDir: isProd ? fileConfig.PROD_PATH : fileConfig.DEV_PATH
-    });
+  // const isDev = req.app.get('env') === 'development';
+  const form = formidable({
+    multiples: true,
+    keepExtensions: true,
+    hash: 'sha1',
+    uploadDir: isProd ? fileConfig.PROD_PATH : fileConfig.DEV_PATH
+  });
 
-    // 前端 append 要求 files，貌似只会获取到单个
-    form.parse(req, async (err, fields, { files }) => {
-      // console.log('uploadFile -> fields', fields);
-      if (err) {
-        console.log('uploadFile -> err', err);
-        return writeJson(res, 500, ERROR_MESSAGE, null);
-      }
+  // 前端 append 要求 files，貌似只会获取到单个
+  form.parse(req, async (err, fields, { files }) => {
+    const fileLocalPath = fsPath.resolve(files.path);
+    try {
+      if (err) return writeJson(res, 500, ERROR_MESSAGE, null);
       if (!files) return writeJson(res, 400, 'error', '上传失败');
-      files.url = filePath + '/' + files.name;
+      // console.log('uploadFile -> files', files);
+      // 根据文件生成的hash判断该文件是否上传过，如果上传过，则直接返回该文件，删除上传的文件，不在写入数据库，防止太多重复文件
+      const beforeFile = await getFileInfoByFileHash(files.hash);
+      console.log('uploadFile -> beforeFile', beforeFile);
+      if (beforeFile) {
+        // 返回查询到的文件，然后删除刚刚上传的文件
+        deleteLocalFile(fileLocalPath);
+        return writeJson(res, 200, 'ok', beforeFile);
+      }
+      files.url = FILE_QINIU_CDN + '/' + files.name;
       // 等待七牛的上传
-      const qiniuInfo = await upQiniu.upload(files.name, files.path);
-      console.log('uploadFile -> qiniuInfo', qiniuInfo);
-      files.qiniuHash = qiniuInfo.hash;
-      files.qiniuKey = qiniuInfo.key;
+      const { hash: qiniuHash, key: qiniuKey } = await upQiniu.upload(files.name, files.path);
+      if (!qiniuHash || !qiniuKey) return writeJson(res, 400, 'error', '上传七牛失败');
+      files.qiniuHash = qiniuHash;
+      files.qiniuKey = qiniuKey;
       // 同步写入SQL
       const data = await createFile2({ ...files, user_id });
       writeJson(res, 200, 'ok', data);
-    });
-  } catch (e) {
-    console.log('uploadFile -> e', e);
-    writeJson(res, 500, ERROR_MESSAGE, null);
-  }
+    } catch (e) {
+      console.log('uploadFile -> e', e);
+      deleteLocalFile(fileLocalPath);
+      if (e.info && e.info.statusCode) {
+        const { data, statusCode } = e.info;
+        return writeJson(res, statusCode, data.error, null);
+      }
+      writeJson(res, 500, ERROR_MESSAGE, null);
+    }
+  });
+}
+
+export function deleteLocalFile(filePath) {
+  fs.unlink(filePath, err => {
+    if (err) {
+      console.log('uploadFile -> err -> 重复文件删除失败', err);
+    } else {
+      console.log('uploadFile -> err -> 重复文件删除成功');
+    }
+  });
+}
+/**
+ * 内部使用：根据hash查询文件是否创建过
+ * @param {*} hash
+ */
+export function getFileInfoByFileHash(hash) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await FileModel.findOne({ where: { hash: { [Op.eq]: hash } } });
+      if (!result) {
+        // 没有查到文件，继续后面的上传文件逻辑
+        return resolve(false);
+      }
+      return resolve(result.dataValues);
+    } catch (e) {
+      console.log('getFileInfoByFileHash -> e', e);
+      reject(e);
+    }
+  });
 }
 
 export async function getFileInfoByQiniu(req, res) {

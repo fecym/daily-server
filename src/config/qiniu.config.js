@@ -11,6 +11,7 @@ export default class UploadQiniu {
     // 简单上传的凭证
     const putPolicy = new qiniu.rs.PutPolicy({ scope: bucket });
     this.uploadToken = putPolicy.uploadToken(mac);
+    console.log('UploadQiniu -> constructor -> this.uploadToken', this.uploadToken);
     const config = new qiniu.conf.Config();
     // config.zone = qiniu.zone.Zone_z0;
     this.formUploader = new qiniu.form_up.FormUploader(config);
@@ -25,8 +26,17 @@ export default class UploadQiniu {
    */
   upload(filename, realPath) {
     return new Promise((resolve, reject) => {
-      this.formUploader.putFile(this.uploadToken, filename, realPath, this.putExtra, (err, body) => {
-        err ? reject(err) : resolve(body);
+      this.formUploader.putFile(this.uploadToken, filename, realPath, this.putExtra, (err, body, info) => {
+        console.log('upload -> info', info);
+        if (err) return reject(err);
+        if (info.statusCode === 200) {
+          resolve(body);
+        } else {
+          reject({
+            body,
+            info
+          });
+        }
       });
     });
   }

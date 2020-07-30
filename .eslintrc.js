@@ -19,6 +19,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-return-assign': 'off',
     'guard-for-in': 'off',
-    'no-async-promise-executor': 'off'
+    'no-async-promise-executor': 'off',
+    'prefer-promise-reject-errors': 'off'
   }
 };
