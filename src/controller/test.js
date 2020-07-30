@@ -15,7 +15,7 @@ function test(req, res, next) {
   console.log(req.query);
   // connectionPool('select * from user;').then(data => {
   connectionPool(queryAll, ['user'])
-    .then((data) => {
+    .then(data => {
       console.log(data);
       if (data) {
         data = formatData(data);
@@ -24,7 +24,7 @@ function test(req, res, next) {
         writeJson(res, 200, 'ok', null);
       }
     })
-    .catch((err) => {
+    .catch(err => {
       console.log('test -> err', err);
       writeJson(res, 500, ERROR_MESSAGE, null);
     });

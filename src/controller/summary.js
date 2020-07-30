@@ -102,9 +102,9 @@ export const getConsumeByYear = async (req, res) => {
   `;
   try {
     const list = await connectionPool(_sql, ['total_amount', 'create_time', 'total_amount', req.username]);
-    const result = list.map((item) => {
+    const result = list.map(item => {
       const obj = {};
-      Object.keys(item).forEach((key) => {
+      Object.keys(item).forEach(key => {
         obj[toHump(key)] = item[key];
       });
       return obj;
@@ -138,9 +138,9 @@ export const getConsumeByMonth = async (req, res, next) => {
   `;
   try {
     const list = await connectionPool(_sql, ['total_amount', 'create_time', req.username]);
-    const result = list.map((item) => {
+    const result = list.map(item => {
       const obj = {};
-      Object.keys(item).forEach((key) => {
+      Object.keys(item).forEach(key => {
         obj[toHump(key)] = item[key];
       });
       return obj;
@@ -179,10 +179,10 @@ export const getConsumeRecordByCurrentWeek = async (req, res) => {
   `;
   try {
     const ret = await connectionPool(_sql, ['create_time', req.uid]);
-    const result = ret.map((item) => {
+    const result = ret.map(item => {
       const week = moment(item.create_time).format('d');
       const mapObj = {};
-      Object.entries(item).forEach((val) => {
+      Object.entries(item).forEach(val => {
         if (val[0] === 'create_time' || val[0] === 'update_time') {
           val[1] = parseTime(val[1]);
         }
@@ -215,10 +215,10 @@ export const getConsumeByLast7DayRecords = async (req, res) => {
   `;
   try {
     const ret = await connectionPool(_sql, ['create_time', req.uid]);
-    const result = ret.map((item) => {
+    const result = ret.map(item => {
       const week = moment(item.create_time).format('d');
       const mapObj = {};
-      Object.entries(item).forEach((val) => {
+      Object.entries(item).forEach(val => {
         if (val[0] === 'create_time' || val[0] === 'update_time') {
           val[1] = parseTime(val[1]);
         }

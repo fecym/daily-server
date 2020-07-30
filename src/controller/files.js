@@ -237,9 +237,11 @@ export async function getFileListByAuth(req, res) {
 export function getFileInfoById(fileId) {
   return new Promise(async (resolve, reject) => {
     try {
-      const { dataValues } = await FileModel.findOne({
+      const fileData = await FileModel.findOne({
         where: { id: { [Op.eq]: fileId } }
       });
+      if (!fileData) return resolve(fileData);
+      const { dataValues } = fileData;
       const r = {};
       Object.entries(dataValues).forEach(val => {
         if (isDate(val[1])) {
@@ -254,4 +256,24 @@ export function getFileInfoById(fileId) {
       reject(e);
     }
   });
+}
+
+/**
+ * 文件删除：真删逻辑
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export async function deleteFileByFileId(req, res, next) {
+  // 文件删除：1. 删除本地；2. 删除sql；3. 删除七牛
+  // TODO: 功能未完善
+  const { id } = req.query;
+  try {
+    const deletedFile = await FileModel.destroy({ where: { id } });
+    console.log('deleteFileByFileId -> deletedFile', deletedFile);
+    writeJson(res, 200, 'ok', { ...deletedFile });
+  } catch (e) {
+    console.log('deleteFileByFileId -> e', e);
+    writeJson(res, 500, ERROR_MESSAGE, null);
+  }
 }

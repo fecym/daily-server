@@ -70,11 +70,10 @@ export const getTransferInfo = async (req, res) => {
     });
     const fileIds = JSON.parse(r.fileIds);
     if (fileIds) {
-      console.log('getTransferInfo -> fileIds', fileIds);
       const fileListPromises = fileIds.map(id => getFileInfoById(id));
-      r.fileList = await Promise.all(fileListPromises);
+      const fileList = await Promise.all(fileListPromises);
+      r.fileList = fileList.filter(file => file);
     }
-    // console.log("getTransferInfo -> fileList", fileListPromises)
     writeJson(res, 200, 'ok', r);
   } catch (e) {
     console.log('getTransferInfo -> e', e);

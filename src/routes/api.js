@@ -73,5 +73,6 @@ module.exports = {
   fileUploadApi: fileApi + '/upload',
   fileDownloadApi: fileApi + '/download',
   fileGetListApi: fileApi + '/get/list',
-  fileGetApi: fileApi + '/get'
+  fileGetApi: fileApi + '/get',
+  fileDeleteApi: fileApi + '/delete'
 };

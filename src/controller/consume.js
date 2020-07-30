@@ -35,9 +35,9 @@ export const getAllConsumeList = async (req, res, next) => {
     const result = await connectionPool(_sql);
     if (result && result.length) {
       const list = [];
-      result.forEach((item) => {
+      result.forEach(item => {
         const mapObj = {};
-        Object.entries(item).forEach((val) => {
+        Object.entries(item).forEach(val => {
           mapObj[toHump(val[0])] = val[1];
         });
         list.push(mapObj);
@@ -82,9 +82,9 @@ export const findConsumeList = async (req, res, next) => {
     if (result && result.length) {
       const list = [];
       // 根据数据库返回的list集合对数据库的所有字段转驼峰命名，并且组装新的数据返给前端
-      result.forEach((item) => {
+      result.forEach(item => {
         const mapObj = {};
-        Object.entries(item).forEach((val) => {
+        Object.entries(item).forEach(val => {
           if (val[0] === 'create_time' || val[0] === 'update_time') {
             val[1] = parseTime(val[1]);
           }
@@ -116,7 +116,7 @@ const addConsumeInfoCore = async (req, res) => {
   const { repastPrice, vehiclePrice, snacksPrice, transferAccounts, otherPrice, cosmeticPrice, lifePrice, tripPrice, shoppingPrice } = req.body;
   // 转驼峰传过去
   let fieldStr = Object.keys(req.body)
-    .map((item) => toLine(item))
+    .map(item => toLine(item))
     .join(', ');
   // 处理总消费
   fieldStr = fieldStr + ', total_amount';
@@ -192,9 +192,9 @@ export const updateConsumeInfo = async (req, res, next) => {
   if (!createTime || !username || !repastPrice || !id) {
     return writeJson(res, 400, '参数校验失败', null);
   }
-  const fieldList = Object.keys(req.body).map((item) => toLine(item));
+  const fieldList = Object.keys(req.body).map(item => toLine(item));
   const body = {};
-  Object.entries(req.body).forEach((item) => (body[toLine(item[0])] = item[1]));
+  Object.entries(req.body).forEach(item => (body[toLine(item[0])] = item[1]));
   // 处理字段名
   let dealData = dealUpdateSql(fieldList, body);
   // 计算当天总消费
@@ -240,13 +240,13 @@ export const currentMonthStatistics = async (req, res, next) => {
       total_amount: 0
     };
     // 计算列表数据
-    list.forEach((item) => {
-      Object.keys(statistics).forEach((key) => {
+    list.forEach(item => {
+      Object.keys(statistics).forEach(key => {
         statistics[key] += (item[key] * 100).toFixed(2) / 100;
       });
     });
     // 计算统计数据
-    Object.keys(statistics).forEach((key) => {
+    Object.keys(statistics).forEach(key => {
       // 属性名称转大写
       const val = statistics[key];
       statistics[toHump(key)] = val;
@@ -264,9 +264,9 @@ export const summaryMonthAmounts = async (req, res, next) => {
   const _sql = `SELECT monthly_fee, SUM( ?? ) AS amount FROM ( SELECT LEFT ( ??, 7 ) AS monthly_fee, username, total_amount FROM ${SQL_TABLE_NAME} WHERE username=? ) AS consume_summary GROUP BY monthly_fee;`;
   try {
     const list = await connectionPool(_sql, ['total_amount', 'create_time', req.username]);
-    const result = list.map((item) => {
+    const result = list.map(item => {
       const obj = {};
-      Object.keys(item).forEach((key) => {
+      Object.keys(item).forEach(key => {
         obj[toHump(key)] = item[key];
       });
       return obj;

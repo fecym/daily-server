@@ -33,7 +33,7 @@ import { createRecord, updateTransferInfo, findTransferRecords, findAllTransferR
 
 // 文件相关
 // import { uploadFile, getFileInfoByLocal } from '../controller/files';
-import { uploadFile, getFileListByAuth } from '../controller/files';
+import { uploadFile, getFileListByAuth, deleteFileByFileId } from '../controller/files';
 
 // router.get(api.testApi, test)
 router.post(api.loginApi, Login);
@@ -82,5 +82,6 @@ router.get(api.findTransferAllRecordsApi, findAllTransferRecords);
 
 router.post(api.fileUploadApi, uploadFile);
 router.get(api.fileGetListApi, getFileListByAuth);
+router.post(api.fileDeleteApi, deleteFileByFileId);
 
 export default router;
