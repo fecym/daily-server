@@ -22,7 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "leancloud-storage": "^4.6.0",
     "leanengine": "^3.6.0",
-    "moment": "^2.26.0",
+    "moment": "^2.29.2",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
